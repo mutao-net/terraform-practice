@@ -10,6 +10,11 @@ resource "aws_vpc" "example" {
   }
 }
 
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.example.id
+}
+
+/**
 resource "aws_subnet" "public" {
   vpc_id     = aws_vpc.example.id
   cidr_block = "10.0.0.0/24"
@@ -20,10 +25,6 @@ resource "aws_subnet" "public" {
 
 // internet gateway
 resource "aws_internet_gateway" "example" {
-  vpc_id = aws_vpc.example.id
-}
-
-resource "aws_route_table" "public" {
   vpc_id = aws_vpc.example.id
 }
 
@@ -39,7 +40,7 @@ resource "aws_route_table_association" "public" {
 }
 
 
-/** private network */
+// private network 
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.example.id
   cidr_block        = "10.0.64.0/24"
@@ -75,4 +76,35 @@ resource "aws_route" "private" {
   route_table_id         = aws_route_table.private.id
   nat_gateway_id         = aws_nat_gateway.example.id
   destination_cidr_block = "0.0.0.0/0"
+}
+*/
+
+// public network multi AZ
+resource "aws_subnet" "public_1" {
+  vpc_id                  = aws_vpc.example.id
+  cidr_block              = "10.0.0.0/24"
+  availability_zone       = "ap-northeast-1a"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "public_subnet_1"
+  }
+}
+resource "aws_subnet" "public_2" {
+  vpc_id                  = aws_vpc.example.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "ap-northeast-1a"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "public_subnet_2"
+  }
+}
+
+resource "aws_route_table_association" "public_1" {
+  subnet_id      = aws_subnet.public_1.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_2" {
+  subnet_id      = aws_subnet.public_2.id
+  route_table_id = aws_route_table.public.id
 }
