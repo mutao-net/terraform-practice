@@ -28,6 +28,13 @@ module "describe_regions_for_ec2" {
 }
 */
 
+/*
 module "network" {
   source = "./network"
+}
+*/
+
+module "nginx_web_server" {
+  source        = "./nginx"
+  instance_type = "t2.micro"
 }
