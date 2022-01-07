@@ -128,3 +128,43 @@ resource "aws_subnet" "private_2" {
     Name = "private_subnet_2"
   }
 }
+
+// NAT Gateway
+resource "aws_eip" "nat_gateway_1" {
+  vpc = true
+  depends_on = [
+    aws_internet_gateway.example
+  ]
+  tags = {
+    Name = "nat_eip_1"
+  }
+}
+
+resource "aws_eip" "nat_gateway_2" {
+  vpc = true
+  depends_on = [
+    aws_internet_gateway.example
+  ]
+  tags = {
+    Name = "nat_eip_2"
+  }
+}
+
+resource "aws_nat_gateway" "nat_gateway_1" {
+  allocation_id = aws_eip.nat_gateway_1.id
+  subnet_id     = aws_subnet.private_1.id
+  dependepends_on = [
+    aws_internet_gateway.example
+  ]
+}
+
+resource "aws_nat_gateway" "nat_gateway_2" {
+  allocation_id = aws_eip.nat_gateway_2.id
+  subnet_id     = aws_subnet.private_2.id
+  dependepends_on = [
+    aws_internet_gateway.example
+  ]
+}
+
+
+
