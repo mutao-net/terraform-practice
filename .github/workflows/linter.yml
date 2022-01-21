@@ -1,7 +1,6 @@
 name: Lint Code Base
 on:
   pull_request:
-    branches: [main]
 
 jobs:
   build:
