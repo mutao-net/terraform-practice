@@ -17,3 +17,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
           FILTER_REGEX_INCLUDE: '\.github/.*/.*\.yml'
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
